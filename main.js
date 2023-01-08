@@ -11,16 +11,21 @@ proxy.on('proxyRes', function (proxyRes, req, res) {
     let data = [];
     proxyRes.on("data", chunk => data.push(chunk));
     proxyRes.on("end", () => {
-        res.end(data); //here return what you want like "hello": res.end("hello");
-    })
+        res.end(data.toString()); //here return what you want like "hello": res.end("hello");
+    });
 });
 
+// Handle request from client
+proxy.on("proxyReq", function (proxyReq, req, res, options) {
+    /* ---------------------- ALTER REQUEST TO SERVER HERE ---------------------- */
+    proxyReq.setHeader('X-Special-Proxy-Header', 'foobar');
+})
+
 //Create proxy server
-http.createServer(function(req, res) {
+http.createServer(function (req, res) {
     let now = Date.now();
-  console.log(`[${dayjs(now).format("DD/MM/YYYY HH:mm:ss.SSS")}] [NewRequest]: `, req.method, req.url);
-  /* ---------------------- ALTER REQUEST TO SERVER HERE ---------------------- */
-  //Redirect req to server
-  proxy.web(req, res, { target: `${req.url}`, selfHandleResponse : true });
+    console.log(`[${dayjs(now).format("DD/MM/YYYY HH:mm:ss.SSS")}] [NewRequest]: `, req.method, req.url);
+    //Redirect req to server
+    proxy.web(req, res, { target: `${req.url}`, selfHandleResponse: true });
 }).listen(PORT, "127.0.0.1");
 console.log(`Ready on port: ${PORT}`);
