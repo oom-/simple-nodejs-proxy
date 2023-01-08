@@ -15,7 +15,6 @@ proxy.on('proxyRes', function (proxyRes, req, res) {
     })
 });
 
-
 //Create proxy server
 http.createServer(function(req, res) {
     let now = Date.now();
