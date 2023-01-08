@@ -11,7 +11,7 @@ proxy.on('proxyRes', function (proxyRes, req, res) {
     let data = [];
     proxyRes.on("data", chunk => data.push(chunk));
     proxyRes.on("end", () => {
-        res.end(data.toString()); //here return what you want like "hello": res.end("hello");
+        res.end(data); //here return what you want like "hello": res.end("hello");
     })
 });
 
